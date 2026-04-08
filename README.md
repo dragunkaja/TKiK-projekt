@@ -2,7 +2,7 @@
 
 Projekt zaliczeniowy z przedmiotu Teoria Kompilacji i Kompilatory.
 
-## Założenia programu - krótki opis
+## Założenia programu 
 
 **Ogólne cele programu:** Celem projektu jest stworzenie natywnego silnika zapytań (Query Engine), który mapuje strukturę systemu operacyjnego na model relacyjnej bazy danych. Program pozwala użytkownikowi na zaawansowane przeszukiwanie i filtrowanie informacji o plikach (np. nazwa, rozmiar, rozszerzenie) przy użyciu standardowej, deklaratywnej składni języka SQL. Silnik operuje bezpośrednio na metadanych pobieranych z dysku, traktując katalogi jako tabele, a pliki jako poszczególne rekordy.
 
