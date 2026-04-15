@@ -70,3 +70,4 @@ Poniżej znajduje się gramatyka języka zapytań DirSQL:
 <condition> ::= <id> <operator> <value>
 <value> ::= <string> | <number>
 ```
+
