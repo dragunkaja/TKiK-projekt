@@ -16,7 +16,8 @@ Projekt zaliczeniowy z przedmiotu Teoria Kompilacji i Kompilatory.
 
 **Planowany język implementacji:** Python z wykorzystaniem biblioteki **PLY (Python Lex-Yacc)**, umożliwiającej implementację analizatora leksykalnego i składniowego w sposób zbliżony do klasycznych narzędzi typu Lex/Yacc.
 
-**Sposób realizacji skanera/parsera:** Wykorzystanie biblioteki **PLY (Python Lex-Yacc)**, która implementuje mechanizmy znane z klasycznych generatorów parserów:
+## Sposób realizacji skanera/parsera:
+Wykorzystanie biblioteki **PLY (Python Lex-Yacc)**, która implementuje mechanizmy znane z klasycznych generatorów parserów:
 
 * **Skaner (Analizator leksykalny):** Zaimplementowany przy użyciu modułu `ply.lex`. Odpowiada za podział wejściowego strumienia znaków na tokeny (słowa kluczowe, identyfikatory, operatory, literały). Tokeny są definiowane za pomocą wyrażeń regularnych bezpośrednio w kodzie Pythona.
 
