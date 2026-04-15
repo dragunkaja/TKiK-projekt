@@ -1,4 +1,4 @@
-# Silnik zapytań SQL dla systemu plików - DirSQL
+# Silnik zapytań SQL dla systemu plików DirSQL - interpreter
 
 Projekt zaliczeniowy z przedmiotu Teoria Kompilacji i Kompilatory.
 
