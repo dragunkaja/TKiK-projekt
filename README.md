@@ -90,4 +90,20 @@ Poniżej znajduje się gramatyka języka zapytań DirSQL:
 <condition> ::= <id> <operator> <value>
 <value> ::= <string> | <number>
 ```
+### Notacja generatora parsera (PLY / Yacc)
 
+``` 
+program : query SEMICOLON
+query : SELECT column_list FROM STRING where_clause
+column_list : STAR
+            | id_list
+id_list : ID
+        | ID COMMA id_list
+where_clause :
+            | WHERE condition
+condition : condition AND condition
+          | condition OR condition
+          | ID OPERATOR value
+value : STRING
+      | NUMBER
+```

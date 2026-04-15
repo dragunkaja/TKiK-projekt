@@ -1,42 +1,27 @@
 import ply.lex as lex
 
-tokens = (
-    'SELECT', 'FROM', 'WHERE', 'AND', 'OR',
+reserved = {
+    'select': 'SELECT',
+    'from': 'FROM',
+    'where': 'WHERE',
+    'and': 'AND',
+    'or': 'OR',
+}
+
+tokens = [
     'ID', 'STRING', 'NUMBER',
-    'OPERATOR',
-    'COMMA', 'SEMICOLON', 'STAR'
-)
+    'OPERATOR', 'COMMA', 'SEMICOLON', 'STAR'
+] + list(reserved.values())
 
 t_COMMA = r','
 t_SEMICOLON = r';'
 t_STAR = r'\*'
 t_OPERATOR = r'>=|<=|!=|=|>|<'
-
 t_ignore = ' \t'
-
-def t_SELECT(t):
-    r'(?i)SELECT'
-    return t
-
-def t_FROM(t):
-    r'(?i)FROM'
-    return t
-
-def t_WHERE(t):
-    r'(?i)WHERE'
-    return t
-
-def t_AND(t):
-    r'(?i)AND'
-    return t
-
-def t_OR(t):
-    r'(?i)OR'
-    return t
-
 
 def t_ID(t):
     r'[a-zA-Z_][a-zA-Z0-9_]*'
+    t.type = reserved.get(t.value.lower(), 'ID')
     return t
 
 def t_STRING(t):
