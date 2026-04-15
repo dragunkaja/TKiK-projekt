@@ -14,6 +14,26 @@ Projekt zaliczeniowy z przedmiotu Teoria Kompilacji i Kompilatory.
 
 **Planowany wynik działania programu:** Interpreter stworzonego podzbioru języka SQL. Program wczytuje zapytanie od użytkownika, buduje jego logiczną strukturę w pamięci, a następnie dynamicznie przegląda system plików (na podstawie ścieżki z klauzuli `FROM`). Wynikiem działania jest wyrzucona na standardowe wyjście (konsolę) sformatowana tabela tekstowa, zawierająca atrybuty plików, które spełniły warunki zdefiniowane w klauzuli `WHERE`.
 
+## Przykład użycia programu
+
+Poniżej znajduje się przykładowe, jednolinijkowe zapytanie weryfikujące działanie interpretera oraz jego spodziewany wynik wyrzucony na standardowe wyjście.
+
+**Przykładowe zapytanie wejściowe (kod SQL):**
+```sql
+SELECT nazwa, rozmiar_b FROM "/home/user/dokumenty" WHERE rozmiar_b > 1024;
+```
+```text
+Przeszukiwanie: /home/user/dokumenty
+--------------------------------------------------
+nazwa | rozmiar_b
+--------------------------------------------------
+raport.pdf | 2048
+notatki.txt | 1536
+prezentacja.pptx | 5120
+--------------------------------------------------
+Znaleziono plików: 3
+```
+
 **Planowany język implementacji:** Python z wykorzystaniem biblioteki **PLY (Python Lex-Yacc)**, umożliwiającej implementację analizatora leksykalnego i składniowego w sposób zbliżony do klasycznych narzędzi typu Lex/Yacc.
 
 ## Sposób realizacji skanera/parsera:
