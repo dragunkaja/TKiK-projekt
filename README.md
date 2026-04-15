@@ -14,15 +14,13 @@ Projekt zaliczeniowy z przedmiotu Teoria Kompilacji i Kompilatory.
 
 **Planowany wynik działania programu:** Interpreter stworzonego podzbioru języka SQL. Program wczytuje zapytanie od użytkownika, buduje jego logiczną strukturę w pamięci, a następnie dynamicznie przegląda system plików (na podstawie ścieżki z klauzuli `FROM`). Wynikiem działania jest wyrzucona na standardowe wyjście (konsolę) sformatowana tabela tekstowa, zawierająca atrybuty plików, które spełniły warunki zdefiniowane w klauzuli `WHERE`.
 
-**Planowany język implementacji:** C++ (
-wymagany standard **C++17** lub nowszy ze względu
-na wbudowaną bibliotekę `<filesystem>` 
-służącą do nawigacji po dysku).
+**Planowany język implementacji:** Python z wykorzystaniem biblioteki **PLY (Python Lex-Yacc)**, umożliwiającej implementację analizatora leksykalnego i składniowego w sposób zbliżony do klasycznych narzędzi typu Lex/Yacc.
 
-**Sposób realizacji skanera/parsera:** Wykorzystanie klasycznych generatorów z rodziny GNU dla języka C/C++:
-* **Skaner (Analizator leksykalny):** Wygenerowany za pomocą narzędzia **Flex**. Odpowiada za podział strumienia znaków wejściowych na predefiniowane tokeny (słowa kluczowe, ciągi znaków, operatory).
-* **Parser (Analizator składniowy):** Wygenerowany za pomocą narzędzia **Bison** (parser LALR). Odpowiada za walidację poprawności gramatycznej zapytania oraz zbudowanie Abstrakcyjnego Drzewa Składniowego (AST) opartego na obiektach języka C++.
+**Sposób realizacji skanera/parsera:** Wykorzystanie biblioteki **PLY (Python Lex-Yacc)**, która implementuje mechanizmy znane z klasycznych generatorów parserów:
 
+* **Skaner (Analizator leksykalny):** Zaimplementowany przy użyciu modułu `ply.lex`. Odpowiada za podział wejściowego strumienia znaków na tokeny (słowa kluczowe, identyfikatory, operatory, literały). Tokeny są definiowane za pomocą wyrażeń regularnych bezpośrednio w kodzie Pythona.
+
+* **Parser (Analizator składniowy):** Zaimplementowany przy użyciu modułu `ply.yacc` (parser typu LALR). Odpowiada za analizę składniową zapytania na podstawie zdefiniowanej gramatyki oraz budowę struktury reprezentującej zapytanie (np. Abstrakcyjnego Drzewa Składniowego – AST), która jest następnie wykorzystywana do jego wykonania.
 
 ## 2. Opis tokenów
 
