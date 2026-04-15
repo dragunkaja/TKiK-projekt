@@ -86,5 +86,4 @@ def p_error(p):
     else:
         print("Błąd składni na końcu wejścia")
 
-# Budowa parsera
 parser = yacc.yacc()
