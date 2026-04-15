@@ -23,7 +23,7 @@ Wykorzystanie biblioteki **PLY (Python Lex-Yacc)**, która implementuje mechaniz
 
 * **Parser (Analizator składniowy):** Zaimplementowany przy użyciu modułu `ply.yacc` (parser typu LALR). Odpowiada za analizę składniową zapytania na podstawie zdefiniowanej gramatyki oraz budowę struktury reprezentującej zapytanie (np. Abstrakcyjnego Drzewa Składniowego – AST), która jest następnie wykorzystywana do jego wykonania.
 
-## 2. Opis tokenów
+## Opis tokenów
 
 Skaner języka używa modułu PLY. Wielkość liter dla słów kluczowych jest ignorowana.
 
