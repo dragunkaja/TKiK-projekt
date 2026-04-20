@@ -1,7 +1,5 @@
 # Silnik zapytań SQL dla systemu plików 'DirSQL' - interpreter
 
-Projekt zaliczeniowy z przedmiotu Teoria Kompilacji i Kompilatory.
-
 ## Autorki:
 - Kaja Dragun - kdragun@student.agh.edu.pl
 - Julia Dorobis - jdorobis@student.agh.edu.pl
