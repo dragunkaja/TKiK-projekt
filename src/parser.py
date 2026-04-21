@@ -40,7 +40,34 @@ def p_select_query(p):
         'limit': p[7]
     }
 
-# --- TUTAJ MOŻESZ DODAĆ REGUŁY DLA DELETE, MOVE, COPY (na wzór select_query) ---
+def p_move_query(p):
+    '''move_query : MOVE FROM STRING TO STRING where_clause limit_clause'''
+    p[0] = {
+        'action': 'MOVE',
+        'source': p[3],
+        'destination': p[5],
+        'where': p[6],
+        'limit': p[7]
+    }
+
+def p_copy_query(p):
+    '''copy_query : COPY FROM STRING TO STRING where_clause limit_clause'''
+    p[0] = {
+        'action': 'COPY',
+        'source': p[3],
+        'destination': p[5],
+        'where': p[6],
+        'limit': p[7]
+    }
+
+def p_delete_query(p):
+    '''delete_query : DELETE FROM STRING where_clause limit_clause'''
+    p[0] = {
+        'action': 'DELETE',
+        'source': p[3],
+        'where': p[4],
+        'limit': p[5]
+    }
 
 def p_column_list_star(p):
     '''column_list : STAR'''
