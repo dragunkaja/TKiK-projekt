@@ -55,61 +55,71 @@ Skaner języka używa modułu PLY. Wielkość liter dla słów kluczowych jest i
 
 **Tabela tokenów:**
 
-| Kategoria | Nazwa | Wyrażenie Regularne |
-| :--- | :--- | :--- |
-| **Słowa kluczowe** | `SELECT`, `FROM`, `WHERE`, `AND`, `OR` | `r'(?i)SELECT'` itd. |
-| **Operatory** | `OPERATOR` | `r'>=|<=|!=|=|>|<'` |
-| **Interpunkcja** | `COMMA`, `SEMICOLON`, `STAR` | `r','`, `r';'`, `r'\*'` |
-| **Identyfikatory** | `ID` | `r'[a-zA-Z_][a-zA-Z0-9_]*'` |
-| **Dane (Zmienne)** | `STRING` | `r'\"[^\"]*\"'` |
-| | `NUMBER` | `r'\d+'` |
+| Kategoria | Nazwa                                                      | Wyrażenie Regularne                                  |
+| :--- |:-----------------------------------------------------------|:-----------------------------------------------------|
+| **Słowa kluczowe (DQL/DML)** | `SELECT`, `DELETE`, `MOVE`, `COPY`, `TO`, `FROM`, `DRYRUN` | `r'(?i)SELECT'`, `r'(?i)DELETE'` itd.                |
+| **Słowa kluczowe (Klauzule)** | `WHERE`, `ORDER`, `BY`, `LIMIT`, `ASC`, `DESC`             | `r'(?i)WHERE'`, `r'(?i)ORDER'` itd.                  |
+| **Słowa kluczowe (Logika)**| `AND`, `OR`, `NOT`, `LIKE`                                 | `r'(?i)AND'`, `r'(?i)LIKE'` itd.                     |
+| **Operatory relacyjne** | `OPERATOR`                                                 | `r'>=\|<=\|!=\|=\|>\|<'`                             |
+| **Interpunkcja** | `COMMA`, `SEMICOLON`, `STAR`                               | `r','`, `r';'`, `r'\*'`                              |
+| **Nawiasy (Priorytetyzacja)**| `LPAREN`, `RPAREN`                                         | `r'\('`, `r'\)'`                                     |
+| **Jednostki wielkości** | `SIZE_UNIT`                                                | `r'(?i)(GB\|MB\|KB\|B)'`                             |
+| **Identyfikatory** | `ID`                                                       | `r'[a-zA-Z_][a-zA-Z0-9_]*'`                          |
+| **Dane (Zmienne)** | `STRING`                                                   | `r'\"[^\"]*\"'` lub `r'\'[^\']*\''`                  |
+| | `NUMBER`                                                   | `r'\d+'`                                             |
 
-**Notacja zastosowanego generatora skanerów (fragment dla PLY):**
-
-```python
-t_COMMA = r','
-t_SEMICOLON = r';'
-t_STAR = r'\*'
-t_OPERATOR = r'>=|<=|!=|=|>|<'
-
-def t_SELECT(t):
-    r'(?i)SELECT'
-    return t
-
-def t_ID(t):
-    r'[a-zA-Z_][a-zA-Z0-9_]*'
-    return t
-```
 
 ## Gramatyka formatu
 
-### Notacja standardowa (BNF)
-Poniżej znajduje się gramatyka języka zapytań DirSQL:
-
-```bnf
-<program> ::= <query> ";"
-<query> ::= "SELECT" <column_list> "FROM" <string> <where_clause>
-<column_list> ::= "*" | <id_list>
-<id_list> ::= <id> | <id> "," <id_list>
-<where_clause> ::= /* puste */ | "WHERE" <condition_list>
-<condition_list> ::= <condition> | <condition> "AND" <condition_list> | <condition> "OR" <condition_list>
-<condition> ::= <id> <operator> <value>
-<value> ::= <string> | <number>
-```
 ### Notacja generatora parsera (PLY / Yacc)
 
-``` 
-program : query SEMICOLON
-query : SELECT column_list FROM STRING where_clause
+```yacc
+
+program : statement SEMICOLON
+
+statement : dryrun_opt query
+
+dryrun_opt : 
+           | DRYRUN
+
+query : select_query
+      | delete_query
+      | move_query
+      | copy_query
+
+select_query : SELECT column_list FROM STRING where_clause order_clause limit_clause
+
+delete_query : DELETE FROM STRING where_clause limit_clause
+
+move_query : MOVE FROM STRING TO STRING where_clause limit_clause
+
+copy_query : COPY FROM STRING TO STRING where_clause limit_clause
+
 column_list : STAR
             | id_list
+
 id_list : ID
         | ID COMMA id_list
+
 where_clause :
-            | WHERE condition
+             | WHERE condition
+
 condition : condition AND condition
           | condition OR condition
+          | NOT condition
+          | LPAREN condition RPAREN
           | ID OPERATOR value
+          | ID LIKE STRING
+
 value : STRING
       | NUMBER
+      | NUMBER SIZE_UNIT
+
+order_clause :
+             | ORDER BY ID
+             | ORDER BY ID ASC
+             | ORDER BY ID DESC
+
+limit_clause :
+             | LIMIT NUMBER
 ```
