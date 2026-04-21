@@ -7,13 +7,13 @@
 ## Założenia programu 
 
 **Cele:** Celem projektu jest stworzenie natywnego silnika zapytań i manipulacji danymi (Query & DML Engine), który mapuje strukturę systemu operacyjnego na model relacyjnej bazy danych.
-Program pozwala użytkownikowi nie tylko na zaawansowane przeszukiwanie informacji o plikach, ale również **bezpieczną, masową automatyzacje operacji systemowych**
+Program pozwala użytkownikowi nie tylko na zaawansowane przeszukiwanie informacji o plikach, ale również **bezpieczną (tryb dry-run), masową automatyzacje operacji systemowych**
 (przenoszenie, usuwanie, kopiowanie) przy użyciu standardowej, deklaratywnej składni języka SQL. 
 Silnik operuje bezpośrednio na metadanych pobieranych z dysku, traktując katalogi jako tabele, a pliki jako poszczególne rekordy.
 
 **Rodzaj translatora:** Interpreter. Program wykonuje analizę i ewaluację kodu "w locie", w jednym przebiegu, bez generowania skompilowanych plików binarnych czy kodu pośredniego.
 
-**Planowany wynik działania programu:** Interpreter stworzonego podzbioru języka SQL obsługujący zapytania typu DQL i DML. Program wczytuje zapytanie od użytkownika, buduje jego logiczną strukturę w pamięci, a następnie dynamicznie analizuje system plików na podstawie ścieżki z klauzul `FROM` lub `TO`. 
+**Planowany wynik działania programu:** Interpreter stworzonego podzbioru języka SQL obsługujący zapytania typu DQL i DML. Program wczytuje zapytanie od użytkownika, buduje jego logiczną strukturę w pamięci, a następnie przeszukuje system plików na podstawie ścieżki z klauzul `FROM` lub `TO`. 
 
 Dla instrukcji `SELECT` wynikiem działania jest wyrzucona na standardowe wyjście (konsolę) sformatowana tabela tekstowa, zawierająca atrybuty plików, które spełniły warunki zdefiniowane w klauzuli `WHERE`.
 
