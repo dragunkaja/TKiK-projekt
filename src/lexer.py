@@ -29,7 +29,7 @@ t_ignore = ' \t'
 
 # Reguły ze zdefiniowanymi akcjami (funkcje)
 def t_SIZE_UNIT(t):
-    r'(?i)(GB|MB|KB|B)'
+    r'(?i)(GB|MB|KB|B)\b'
     t.value = t.value.upper()
     return t
 

@@ -40,8 +40,22 @@ def p_select_query(p):
         'limit': p[7]
     }
 
+
+# --- REGUŁY DLA DML (Data Manipulation Language) ---
+
+def p_delete_query(p):
+    '''delete_query : DELETE FROM STRING where_clause limit_clause'''
+    # p[1]=DELETE, p[2]=FROM, p[3]=STRING (ścieżka), p[4]=where, p[5]=limit
+    p[0] = {
+        'action': 'DELETE',
+        'path': p[3],
+        'where': p[4],
+        'limit': p[5]
+    }
+
 def p_move_query(p):
     '''move_query : MOVE FROM STRING TO STRING where_clause limit_clause'''
+    # p[1]=MOVE, p[2]=FROM, p[3]=STRING(źródło), p[4]=TO, p[5]=STRING(cel), p[6]=where, p[7]=limit
     p[0] = {
         'action': 'MOVE',
         'source': p[3],
@@ -52,6 +66,7 @@ def p_move_query(p):
 
 def p_copy_query(p):
     '''copy_query : COPY FROM STRING TO STRING where_clause limit_clause'''
+    # p[1]=COPY, p[2]=FROM, p[3]=STRING(źródło), p[4]=TO, p[5]=STRING(cel), p[6]=where, p[7]=limit
     p[0] = {
         'action': 'COPY',
         'source': p[3],
@@ -59,15 +74,7 @@ def p_copy_query(p):
         'where': p[6],
         'limit': p[7]
     }
-
-def p_delete_query(p):
-    '''delete_query : DELETE FROM STRING where_clause limit_clause'''
-    p[0] = {
-        'action': 'DELETE',
-        'source': p[3],
-        'where': p[4],
-        'limit': p[5]
-    }
+# --- TUTAJ MOŻESZ DODAĆ REGUŁY DLA DELETE, MOVE, COPY (na wzór select_query) ---
 
 def p_column_list_star(p):
     '''column_list : STAR'''

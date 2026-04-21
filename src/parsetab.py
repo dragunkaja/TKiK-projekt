@@ -6,9 +6,9 @@ _tabversion = '3.10'
 
 _lr_method = 'LALR'
 
-_lr_signature = 'leftORleftANDAND COMMA FROM ID NUMBER OPERATOR OR SELECT SEMICOLON STAR STRING WHEREprogram : query SEMICOLONquery : SELECT column_list FROM STRING where_clausecolumn_list : STARcolumn_list : IDcolumn_list : column_list COMMA IDwhere_clause :where_clause : WHERE conditioncondition : condition AND condition\n                 | condition OR conditioncondition : ID OPERATOR valuevalue : STRINGvalue : NUMBER'
+_lr_signature = 'leftORleftANDrightNOTAND ASC BY COMMA COPY DELETE DESC DRYRUN FROM ID LIKE LIMIT LPAREN MOVE NOT NUMBER OPERATOR OR ORDER RPAREN SELECT SEMICOLON SIZE_UNIT STAR STRING TO WHEREprogram : statement SEMICOLONstatement : dryrun_opt querydryrun_opt : DRYRUN\n                  | emptyquery : select_query\n             | delete_query\n             | move_query\n             | copy_queryselect_query : SELECT column_list FROM STRING where_clause order_clause limit_clausedelete_query : DELETE FROM STRING where_clause limit_clausemove_query : MOVE FROM STRING TO STRING where_clause limit_clausecopy_query : COPY FROM STRING TO STRING where_clause limit_clausecolumn_list : STARcolumn_list : id_listid_list : ID\n               | ID COMMA id_listwhere_clause : WHERE condition\n                    | emptycondition : condition AND condition\n                 | condition OR conditioncondition : NOT conditioncondition : LPAREN condition RPARENcondition : ID OPERATOR valuecondition : ID LIKE STRINGvalue : STRING\n             | NUMBERvalue : NUMBER SIZE_UNITorder_clause : ORDER BY ID\n                    | ORDER BY ID ASC\n                    | ORDER BY ID DESC\n                    | emptylimit_clause : LIMIT NUMBER\n                    | emptyempty :'
     
-_lr_action_items = {'SELECT':([0,],[3,]),'$end':([1,4,],[0,-1,]),'SEMICOLON':([2,10,12,14,19,20,21,22,23,],[4,-6,-2,-7,-8,-9,-10,-11,-12,]),'STAR':([3,],[6,]),'ID':([3,9,13,16,17,],[7,11,15,15,15,]),'FROM':([5,6,7,11,],[8,-3,-4,-5,]),'COMMA':([5,6,7,11,],[9,-3,-4,-5,]),'STRING':([8,18,],[10,22,]),'WHERE':([10,],[13,]),'AND':([14,19,20,21,22,23,],[16,-8,16,-10,-11,-12,]),'OR':([14,19,20,21,22,23,],[17,-8,-9,-10,-11,-12,]),'OPERATOR':([15,],[18,]),'NUMBER':([18,],[23,]),}
+_lr_action_items = {'DRYRUN':([0,],[4,]),'SELECT':([0,3,4,5,],[-34,12,-3,-4,]),'DELETE':([0,3,4,5,],[-34,13,-3,-4,]),'MOVE':([0,3,4,5,],[-34,14,-3,-4,]),'COPY':([0,3,4,5,],[-34,15,-3,-4,]),'$end':([1,6,],[0,-1,]),'SEMICOLON':([2,7,8,9,10,11,25,28,30,32,35,36,38,39,43,44,45,47,48,51,55,56,57,59,60,61,62,63,64,65,66,67,68,69,70,71,],[6,-2,-5,-6,-7,-8,-34,-34,-34,-18,-34,-10,-33,-17,-34,-34,-34,-31,-32,-21,-34,-34,-9,-19,-20,-22,-23,-25,-26,-24,-11,-12,-28,-27,-29,-30,]),'STAR':([12,],[17,]),'ID':([12,24,31,40,41,49,50,58,],[19,19,42,42,42,42,42,68,]),'FROM':([13,14,15,16,17,18,19,29,],[20,21,22,23,-13,-14,-15,-16,]),'COMMA':([19,],[24,]),'STRING':([20,21,22,23,33,34,53,54,],[25,26,27,28,43,44,63,65,]),'WHERE':([25,28,43,44,],[31,31,31,31,]),'LIMIT':([25,28,30,32,35,39,43,44,45,47,51,55,56,59,60,61,62,63,64,65,68,69,70,71,],[-34,-34,37,-18,-34,-17,-34,-34,37,-31,-21,37,37,-19,-20,-22,-23,-25,-26,-24,-28,-27,-29,-30,]),'TO':([26,27,],[33,34,]),'ORDER':([28,32,35,39,51,59,60,61,62,63,64,65,69,],[-34,-18,46,-17,-21,-19,-20,-22,-23,-25,-26,-24,-27,]),'NOT':([31,40,41,49,50,],[40,40,40,40,40,]),'LPAREN':([31,40,41,49,50,],[41,41,41,41,41,]),'NUMBER':([37,53,],[48,64,]),'AND':([39,51,52,59,60,61,62,63,64,65,69,],[49,-21,49,-19,49,-22,-23,-25,-26,-24,-27,]),'OR':([39,51,52,59,60,61,62,63,64,65,69,],[50,-21,50,-19,-20,-22,-23,-25,-26,-24,-27,]),'OPERATOR':([42,],[53,]),'LIKE':([42,],[54,]),'BY':([46,],[58,]),'RPAREN':([51,52,59,60,61,62,63,64,65,69,],[-21,61,-19,-20,-22,-23,-25,-26,-24,-27,]),'SIZE_UNIT':([64,],[69,]),'ASC':([68,],[70,]),'DESC':([68,],[71,]),}
 
 _lr_action = {}
 for _k, _v in _lr_action_items.items():
@@ -17,7 +17,7 @@ for _k, _v in _lr_action_items.items():
       _lr_action[_x][_k] = _y
 del _lr_action_items
 
-_lr_goto_items = {'program':([0,],[1,]),'query':([0,],[2,]),'column_list':([3,],[5,]),'where_clause':([10,],[12,]),'condition':([13,16,17,],[14,19,20,]),'value':([18,],[21,]),}
+_lr_goto_items = {'program':([0,],[1,]),'statement':([0,],[2,]),'dryrun_opt':([0,],[3,]),'empty':([0,25,28,30,35,43,44,45,55,56,],[5,32,32,38,47,32,32,38,38,38,]),'query':([3,],[7,]),'select_query':([3,],[8,]),'delete_query':([3,],[9,]),'move_query':([3,],[10,]),'copy_query':([3,],[11,]),'column_list':([12,],[16,]),'id_list':([12,24,],[18,29,]),'where_clause':([25,28,43,44,],[30,35,55,56,]),'limit_clause':([30,45,55,56,],[36,57,66,67,]),'condition':([31,40,41,49,50,],[39,51,52,59,60,]),'order_clause':([35,],[45,]),'value':([53,],[62,]),}
 
 _lr_goto = {}
 for _k, _v in _lr_goto_items.items():
@@ -27,16 +27,38 @@ for _k, _v in _lr_goto_items.items():
 del _lr_goto_items
 _lr_productions = [
   ("S' -> program","S'",1,None,None,None),
-  ('program -> query SEMICOLON','program',2,'p_program','parser.py',11),
-  ('query -> SELECT column_list FROM STRING where_clause','query',5,'p_query','parser.py',18),
-  ('column_list -> STAR','column_list',1,'p_column_list_star','parser.py',29),
-  ('column_list -> ID','column_list',1,'p_column_list_single','parser.py',33),
-  ('column_list -> column_list COMMA ID','column_list',3,'p_column_list_multiple','parser.py',37),
-  ('where_clause -> <empty>','where_clause',0,'p_where_clause_empty','parser.py',43),
-  ('where_clause -> WHERE condition','where_clause',2,'p_where_clause','parser.py',47),
-  ('condition -> condition AND condition','condition',3,'p_condition_logic','parser.py',53),
-  ('condition -> condition OR condition','condition',3,'p_condition_logic','parser.py',54),
-  ('condition -> ID OPERATOR value','condition',3,'p_condition_relation','parser.py',63),
-  ('value -> STRING','value',1,'p_value_string','parser.py',74),
-  ('value -> NUMBER','value',1,'p_value_number','parser.py',78),
+  ('program -> statement SEMICOLON','program',2,'p_program','dirsql_parser.py',12),
+  ('statement -> dryrun_opt query','statement',2,'p_statement','dirsql_parser.py',16),
+  ('dryrun_opt -> DRYRUN','dryrun_opt',1,'p_dryrun_opt','dirsql_parser.py',20),
+  ('dryrun_opt -> empty','dryrun_opt',1,'p_dryrun_opt','dirsql_parser.py',21),
+  ('query -> select_query','query',1,'p_query','dirsql_parser.py',25),
+  ('query -> delete_query','query',1,'p_query','dirsql_parser.py',26),
+  ('query -> move_query','query',1,'p_query','dirsql_parser.py',27),
+  ('query -> copy_query','query',1,'p_query','dirsql_parser.py',28),
+  ('select_query -> SELECT column_list FROM STRING where_clause order_clause limit_clause','select_query',7,'p_select_query','dirsql_parser.py',32),
+  ('delete_query -> DELETE FROM STRING where_clause limit_clause','delete_query',5,'p_delete_query','dirsql_parser.py',47),
+  ('move_query -> MOVE FROM STRING TO STRING where_clause limit_clause','move_query',7,'p_move_query','dirsql_parser.py',57),
+  ('copy_query -> COPY FROM STRING TO STRING where_clause limit_clause','copy_query',7,'p_copy_query','dirsql_parser.py',68),
+  ('column_list -> STAR','column_list',1,'p_column_list_star','dirsql_parser.py',80),
+  ('column_list -> id_list','column_list',1,'p_column_list_id','dirsql_parser.py',84),
+  ('id_list -> ID','id_list',1,'p_id_list','dirsql_parser.py',88),
+  ('id_list -> ID COMMA id_list','id_list',3,'p_id_list','dirsql_parser.py',89),
+  ('where_clause -> WHERE condition','where_clause',2,'p_where_clause','dirsql_parser.py',97),
+  ('where_clause -> empty','where_clause',1,'p_where_clause','dirsql_parser.py',98),
+  ('condition -> condition AND condition','condition',3,'p_condition_binop','dirsql_parser.py',106),
+  ('condition -> condition OR condition','condition',3,'p_condition_binop','dirsql_parser.py',107),
+  ('condition -> NOT condition','condition',2,'p_condition_not','dirsql_parser.py',111),
+  ('condition -> LPAREN condition RPAREN','condition',3,'p_condition_group','dirsql_parser.py',115),
+  ('condition -> ID OPERATOR value','condition',3,'p_condition_rel','dirsql_parser.py',119),
+  ('condition -> ID LIKE STRING','condition',3,'p_condition_like','dirsql_parser.py',123),
+  ('value -> STRING','value',1,'p_value','dirsql_parser.py',128),
+  ('value -> NUMBER','value',1,'p_value','dirsql_parser.py',129),
+  ('value -> NUMBER SIZE_UNIT','value',2,'p_value_size','dirsql_parser.py',133),
+  ('order_clause -> ORDER BY ID','order_clause',3,'p_order_clause','dirsql_parser.py',138),
+  ('order_clause -> ORDER BY ID ASC','order_clause',4,'p_order_clause','dirsql_parser.py',139),
+  ('order_clause -> ORDER BY ID DESC','order_clause',4,'p_order_clause','dirsql_parser.py',140),
+  ('order_clause -> empty','order_clause',1,'p_order_clause','dirsql_parser.py',141),
+  ('limit_clause -> LIMIT NUMBER','limit_clause',2,'p_limit_clause','dirsql_parser.py',149),
+  ('limit_clause -> empty','limit_clause',1,'p_limit_clause','dirsql_parser.py',150),
+  ('empty -> <empty>','empty',0,'p_empty','dirsql_parser.py',155),
 ]
