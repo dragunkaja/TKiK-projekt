@@ -1,18 +1,24 @@
 # Silnik zapytań SQL dla systemu plików 'DirSQL'
 
-Projekt zaliczeniowy z przedmiotu Teoria Kompilacji i Kompilatory.
-
 ## Autorki:
 - Kaja Dragun - kdragun@student.agh.edu.pl
 - Julia Dorobis - jdorobis@student.agh.edu.pl
 
 ## Założenia programu 
 
-**Cele:** Celem projektu jest stworzenie natywnego silnika zapytań (Query Engine), który mapuje strukturę systemu operacyjnego na model relacyjnej bazy danych. Program pozwala użytkownikowi na zaawansowane przeszukiwanie i filtrowanie informacji o plikach (np. nazwa, rozmiar, rozszerzenie) przy użyciu standardowej, deklaratywnej składni języka SQL. Silnik operuje bezpośrednio na metadanych pobieranych z dysku, traktując katalogi jako tabele, a pliki jako poszczególne rekordy.
+**Cele:** Celem projektu jest stworzenie natywnego silnika zapytań i manipulacji danymi (Query & DML Engine), który mapuje strukturę systemu operacyjnego na model relacyjnej bazy danych.
+Program pozwala użytkownikowi nie tylko na zaawansowane przeszukiwanie informacji o plikach, ale również **bezpieczną, masową automatyzacje operacji systemowych**
+(przenoszenie, usuwanie, kopiowanie) przy użyciu standardowej, deklaratywnej składni języka SQL. 
+Silnik operuje bezpośrednio na metadanych pobieranych z dysku, traktując katalogi jako tabele, a pliki jako poszczególne rekordy.
 
 **Rodzaj translatora:** Interpreter. Program wykonuje analizę i ewaluację kodu "w locie", w jednym przebiegu, bez generowania skompilowanych plików binarnych czy kodu pośredniego.
 
-**Planowany wynik działania programu:** Interpreter stworzonego podzbioru języka SQL. Program wczytuje zapytanie od użytkownika, buduje jego logiczną strukturę w pamięci, a następnie dynamicznie przegląda system plików (na podstawie ścieżki z klauzuli `FROM`). Wynikiem działania jest wyrzucona na standardowe wyjście (konsolę) sformatowana tabela tekstowa, zawierająca atrybuty plików, które spełniły warunki zdefiniowane w klauzuli `WHERE`.
+**Planowany wynik działania programu:** Interpreter stworzonego podzbioru języka SQL obsługujący zapytania typu DQL i DML. Program wczytuje zapytanie od użytkownika, buduje jego logiczną strukturę w pamięci, a następnie dynamicznie analizuje system plików na podstawie ścieżki z klauzul `FROM` lub `TO`. 
+
+Dla instrukcji `SELECT` wynikiem działania jest wyrzucona na standardowe wyjście (konsolę) sformatowana tabela tekstowa, zawierająca atrybuty plików, które spełniły warunki zdefiniowane w klauzuli `WHERE`.
+
+Dla instrukcji `DELETE`, `MOVE TO`, `COPY TO` wynikiem jest szczegółowy raport z przebiegu operacji, zawierający liczbę przetworzonych plików, informację o powodzeniu akcji dla poszczególnych rekordów oraz sumaryczne podsumowanie zmian wprowadzonych w systemie plików.
+
 
 ## Przykład użycia programu
 
@@ -34,7 +40,7 @@ prezentacja.pptx | 5120
 Znaleziono plików: 3
 ```
 
-**Planowany język implementacji:** Python z wykorzystaniem biblioteki **PLY (Python Lex-Yacc)**, umożliwiającej implementację analizatora leksykalnego i składniowego w sposób zbliżony do klasycznych narzędzi typu Lex/Yacc.
+**Planowany język implementacji:** Python z wykorzystaniem biblioteki **PLY (Python Lex-Yacc)**.
 
 ## Sposób realizacji skanera/parsera:
 Wykorzystanie biblioteki **PLY (Python Lex-Yacc)**, która implementuje mechanizmy znane z klasycznych generatorów parserów:
