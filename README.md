@@ -13,7 +13,7 @@ Silnik operuje bezpośrednio na metadanych pobieranych z dysku, traktując katal
 
 **Rodzaj translatora:** Interpreter. Program wykonuje analizę i ewaluację kodu "w locie", w jednym przebiegu, bez generowania skompilowanych plików binarnych czy kodu pośredniego.
 
-**Planowany wynik działania programu:** Interpreter stworzonego podzbioru języka SQL obsługujący zapytania typu DQL i DML. Program wczytuje zapytanie od użytkownika, buduje jego logiczną strukturę w pamięci, a następnie przeszukuje system plików na podstawie ścieżki z klauzul `FROM` lub `TO`. 
+**Wynik działania programu:** Interpreter stworzonego podzbioru języka SQL obsługujący zapytania typu DQL i DML. Program wczytuje zapytanie od użytkownika, buduje jego logiczną strukturę w pamięci, a następnie przeszukuje system plików na podstawie ścieżki z klauzul `FROM` lub `TO`. 
 
 Dla instrukcji `SELECT` wynikiem działania jest wyrzucona na standardowe wyjście (konsolę) sformatowana tabela tekstowa, zawierająca atrybuty plików, które spełniły warunki zdefiniowane w klauzuli `WHERE`.
 
