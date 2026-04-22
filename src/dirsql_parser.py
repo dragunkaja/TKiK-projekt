@@ -1,7 +1,7 @@
 import ply.yacc as yacc
 from lexer import tokens
 
-# precedencja operatorów logicznych (rozwiązuje konflikty przy AND/OR)
+# Precedencja operatorów logicznych (rozwiązuje konflikty przy AND/OR)
 precedence = (
     ('left', 'OR'),
     ('left', 'AND'),
@@ -30,7 +30,7 @@ def p_query(p):
 
 def p_select_query(p):
     '''select_query : SELECT column_list FROM STRING where_clause order_clause limit_clause'''
-    #p[0] = SelectNode(p[2], p[4], p[5], p[6], p[7])
+    # Docelowo tu będzie: p[0] = SelectNode(p[2], p[4], p[5], p[6], p[7])
     p[0] = {
         'action': 'SELECT',
         'columns': p[2],
@@ -41,7 +41,7 @@ def p_select_query(p):
     }
 
 
-#REGUŁY DLA DML (Data Manipulation Language)
+# --- REGUŁY DLA DML (Data Manipulation Language) ---
 
 def p_delete_query(p):
     '''delete_query : DELETE FROM STRING where_clause limit_clause'''
@@ -74,6 +74,7 @@ def p_copy_query(p):
         'where': p[6],
         'limit': p[7]
     }
+# --- TUTAJ MOŻESZ DODAĆ REGUŁY DLA DELETE, MOVE, COPY (na wzór select_query) ---
 
 def p_column_list_star(p):
     '''column_list : STAR'''
@@ -91,7 +92,7 @@ def p_id_list(p):
     else:
         p[0] = [p[1]] + p[3]
 
-#KLAUZULA WHERE
+# --- KLAUZULA WHERE ---
 def p_where_clause(p):
     '''where_clause : WHERE condition
                     | empty'''
@@ -100,7 +101,7 @@ def p_where_clause(p):
     else:
         p[0] = None
 
-#WARUNKI
+# --- WARUNKI (Conditions) ---
 def p_condition_binop(p):
     '''condition : condition AND condition
                  | condition OR condition'''
@@ -122,7 +123,7 @@ def p_condition_like(p):
     '''condition : ID LIKE STRING'''
     p[0] = {'rel_op': 'LIKE', 'column': p[1], 'value': p[3]}
 
-#WARTOŚCI
+# --- WARTOŚCI ---
 def p_value(p):
     '''value : STRING
              | NUMBER'''
@@ -132,7 +133,7 @@ def p_value_size(p):
     '''value : NUMBER SIZE_UNIT'''
     p[0] = (p[1], p[2])
 
-#KLAUZULE POMOCNICZE (ORDER, LIMIT)
+# --- KLAUZULE POMOCNICZE (ORDER, LIMIT) ---
 def p_order_clause(p):
     '''order_clause : ORDER BY ID
                     | ORDER BY ID ASC
@@ -149,16 +150,17 @@ def p_limit_clause(p):
                     | empty'''
     p[0] = p[2] if len(p) == 3 else None
 
-#pusta produkcja dla opcjonalnych klauzul
+# Pusta produkcja dla opcjonalnych klauzul
 def p_empty(p):
     'empty :'
     pass
 
-#obsługa błędów składniowych
+# Obsługa błędów składniowych
 def p_error(p):
     if p:
         print(f"Błąd składni w okolicach tokena '{p.value}' (typ: {p.type}, linia: {p.lineno})")
     else:
         print("Błąd składni: Niespodziewany koniec zapytania (EOF)")
 
+# Inicjalizacja parsera
 parser = yacc.yacc()
