@@ -1,4 +1,4 @@
-import pprint  # Biblioteka do ładnego wyświetlania słowników
+import pprint
 from dirsql_parser import parser  # Importujemy gotowy parser z Twojego pliku
 
 

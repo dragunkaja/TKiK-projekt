@@ -76,6 +76,7 @@ Skaner języka używa modułu PLY. Wielkość liter dla słów kluczowych jest i
 ```yacc
 
 program : statement SEMICOLON
+        | program statement SEMICOLON
 
 statement : dryrun_opt query
 
