@@ -8,11 +8,10 @@ def test_query(query_string):
     print(f"Wejście SQL : {query_string}")
 
     try:
-        # Tu dzieje się magia – parser przetwarza tekst na AST
+
         result = parser.parse(query_string)
 
         print("Wynik (AST):")
-        # pprint ładnie sformatuje słownik, żeby nie był w jednej długiej linii
         pprint.pprint(result, sort_dicts=False, indent=2)
     except Exception as e:
         print(f"Błąd podczas parsowania: {e}")
@@ -50,7 +49,7 @@ if __name__ == '__main__':
             if not user_input.strip():
                 continue
 
-            # Parsujemy i wyświetlamy wynik
+
             result = parser.parse(user_input)
             if result:
                 pprint.pprint(result, sort_dicts=False, indent=2)

@@ -1,7 +1,7 @@
 import ply.yacc as yacc
 from lexer import tokens
 
-# Precedencja operatorów logicznych (rozwiązuje konflikty przy AND/OR)
+
 precedence = (
     ('left', 'OR'),
     ('left', 'AND'),
@@ -66,7 +66,6 @@ def p_move_query(p):
 
 def p_copy_query(p):
     '''copy_query : COPY FROM STRING TO STRING where_clause limit_clause'''
-    # p[1]=COPY, p[2]=FROM, p[3]=STRING(źródło), p[4]=TO, p[5]=STRING(cel), p[6]=where, p[7]=limit
     p[0] = {
         'action': 'COPY',
         'source': p[3],
@@ -74,7 +73,7 @@ def p_copy_query(p):
         'where': p[6],
         'limit': p[7]
     }
-# --- TUTAJ MOŻESZ DODAĆ REGUŁY DLA DELETE, MOVE, COPY (na wzór select_query) ---
+
 
 def p_column_list_star(p):
     '''column_list : STAR'''
