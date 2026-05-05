@@ -19,7 +19,7 @@ def test_query(query_string):
 
 
 if __name__ == '__main__':
-    print("=== START TESTÓW AUTOMATYCZNYCH ===")
+    print("START TESTÓW AUTOMATYCZNYCH")
 
     # Test 1: Klasyczny SELECT z zaawansowanym WHERE
     test1 = 'SELECT nazwa, rozmiar FROM "/home/user" WHERE rozmiar > 100 MB ORDER BY rozmiar DESC LIMIT 10;'
@@ -33,13 +33,12 @@ if __name__ == '__main__':
     test3 = 'DELETE FROM "/tmp" WHERE name LIKE "%.tmp" AND size < 1 KB;'
     test_query(test3)
 
-    print("\n=== TRYB INTERAKTYWNY ===")
+    print("\n= TRYB INTERAKTYWNY =")
     print("Wpisz swoje zapytanie SQL (pamiętaj o średniku na końcu!).")
     print("Wpisz 'exit', aby zakończyć.\n")
 
     while True:
         try:
-            # Pobieramy tekst od użytkownika
             user_input = input("DirSQL > ")
 
             if user_input.lower() in ['exit', 'quit']:
