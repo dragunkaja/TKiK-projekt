@@ -9,8 +9,14 @@ precedence = (
 )
 
 def p_program(p):
-    '''program : statement SEMICOLON'''
-    p[0] = p[1]
+    '''program : statement SEMICOLON
+               | program statement SEMICOLON'''
+    if len(p) == 3:
+        # Przypadek podstawowy: jedno zapytanie. Tworzymy listę z 1 elementem.
+        p[0] = [p[1]]
+    else:
+        # Krok rekurencyjny: dodajemy kolejne zapytanie do istniejącej listy.
+        p[0] = p[1] + [p[2]]
 
 def p_statement(p):
     '''statement : dryrun_opt query'''
