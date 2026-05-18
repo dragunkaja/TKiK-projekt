@@ -2,18 +2,14 @@ from dataclasses import dataclass
 from typing import Optional, Union, Dict, Any, Tuple
 
 
-# =========================================================
 #                     NODES BAZOWE
-# =========================================================
 
 class ASTNode:
     def to_dict(self) -> Dict[str, Any]:
         raise NotImplementedError
 
 
-# =========================================================
 #                    PROGRAM / STATEMENT
-# =========================================================
 
 @dataclass
 class StatementNode(ASTNode):
@@ -36,9 +32,7 @@ class ProgramNode(ASTNode):
         return self.statement.to_dict()
 
 
-# =========================================================
 #                         QUERY
-# =========================================================
 
 @dataclass
 class QueryNode(ASTNode):
@@ -168,9 +162,7 @@ class CopyQueryNode(QueryNode):
         }
 
 
-# =========================================================
 #                      CONDITIONS
-# =========================================================
 
 @dataclass
 class ConditionNode(ASTNode):
@@ -231,9 +223,7 @@ class LikeConditionNode(ConditionNode):
         }
 
 
-# =========================================================
 #                         VALUES
-# =========================================================
 
 @dataclass
 class ValueNode(ASTNode):
@@ -269,10 +259,7 @@ class SizeValueNode(ValueNode):
         return self.to_python()
 
 
-# =========================================================
 #                    ORDER / LIMIT
-# =========================================================
-
 @dataclass
 class OrderClauseNode(ASTNode):
     column: str

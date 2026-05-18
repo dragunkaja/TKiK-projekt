@@ -7,7 +7,7 @@ def print_welcome():
     print("=" * 60)
     print(" DirSQL - System Plików jako Baza Danych (Wersja Beta)")
     print("=" * 60)
-    print("Dostępne polecenia: SELECT, DELETE, MOVE TO, COPY TO.")
+    print("Dostępne polecenia: SELECT, DELETE, MOVE FROM ... TO ..., COPY FROM ... TO ...")
     print("Dodaj prefiks DRYRUN, aby przetestować bez zmian na dysku.")
     print("Wpisz 'exit' lub 'quit' aby wyjść.")
     print("Pamiętaj o średniku (;) na końcu zapytania!\n")
@@ -28,11 +28,15 @@ if __name__ == '__main__':
                 continue
 
             # Krok 1: Parsowanie (Lexer + Yacc)
-            result = parser.parse(user_input)
+            ast = parser.parse(user_input)
 
-            # Krok 2: Wykonanie w silniku
-            if result:
-                execute_ast(result)
+            # Krok 2: Podgląd AST
+            if ast:
+                print("\n[AST]")
+                pprint.pprint(ast.to_dict(), sort_dicts=False, indent=2)
+
+                # Krok 3: Wykonanie w silniku
+                execute_ast(ast.to_dict())
 
         except EOFError:
             break
