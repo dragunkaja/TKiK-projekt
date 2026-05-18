@@ -4,9 +4,9 @@ from engine import execute_ast
 
 
 def print_welcome():
-    print("=" * 60)
+    print("-" * 60)
     print(" DirSQL - System Plików jako Baza Danych (Wersja Beta)")
-    print("=" * 60)
+    print("-" * 60)
     print("Dostępne polecenia: SELECT, DELETE, MOVE FROM ... TO ..., COPY FROM ... TO ...")
     print("Dodaj prefiks DRYRUN, aby przetestować bez zmian na dysku.")
     print("Wpisz 'exit' lub 'quit' aby wyjść.")

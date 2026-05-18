@@ -4,11 +4,11 @@ import fnmatch
 
 
 def parse_size(val):
-    """Pomocnicza funkcja: zamienia krotki np. (100, 'MB') na bajty."""
+    """Zamienia krotki np. (100, 'MB') na bajty, obsługuje też zwykłe liczby."""
     if isinstance(val, tuple):
         number, unit = val
         multipliers = {'B': 1, 'KB': 1024, 'MB': 1024 ** 2, 'GB': 1024 ** 3}
-        return number * multipliers.get(unit.upper(), 1)
+        return number * multipliers.get(str(unit).upper(), 1)
     return val
 
 
@@ -17,7 +17,6 @@ def evaluate_condition(cond_ast, file_data):
     if not cond_ast:
         return True
 
-    # Obsługa operatorów logicznych (AND, OR, NOT)
     if 'logic_op' in cond_ast:
         op = cond_ast['logic_op']
         if op == 'AND':
@@ -27,7 +26,6 @@ def evaluate_condition(cond_ast, file_data):
         elif op == 'NOT':
             return not evaluate_condition(cond_ast['val'], file_data)
 
-    # Obsługa operatorów relacyjnych (>, <, =, LIKE)
     if 'rel_op' in cond_ast:
         col = cond_ast['column']
         op = cond_ast['rel_op']
@@ -35,12 +33,13 @@ def evaluate_condition(cond_ast, file_data):
 
         actual_val = file_data.get(col)
         if actual_val is None:
-            return False  # Kolumna nie istnieje
+            return False
 
         if op == 'LIKE':
-            # Zamiana SQL-owego % na systemowy *
-            pattern = val.replace('%', '*')
+            # Rzutujemy na str, aby program nie crashował jeśli actual_val to liczba
+            pattern = str(val).replace('%', '*')
             return fnmatch.fnmatch(str(actual_val), pattern)
+
         elif op == '=':
             return actual_val == val
         elif op == '!=':
@@ -58,7 +57,7 @@ def evaluate_condition(cond_ast, file_data):
 
 
 def get_files_data(path, where_ast):
-    """Przeszukuje katalog i zwraca listę słowników z danymi plików spełniających WHERE."""
+    """Przeszukuje katalog i zwraca listę metadanych plików."""
     results = []
     if not os.path.exists(path):
         print(f"[BŁĄD] Ścieżka {path} nie istnieje!")
@@ -87,7 +86,7 @@ def get_files_data(path, where_ast):
 
 
 def execute_ast(ast):
-    """Główna funkcja przyjmująca wygenerowane AST i decydująca co zrobić."""
+    """Główna funkcja wykonująca zapytanie na dysku."""
     is_dryrun = ast.get('dryrun', False)
     query = ast['query']
     action = query['action']
@@ -95,13 +94,11 @@ def execute_ast(ast):
     print(f"\n[{'DRY-RUN' if is_dryrun else 'WYKONANIE'}] Akcja: {action}")
     print("-" * 60)
 
-    # 1. Pobieranie plików (wspólne dla wszystkich akcji)
     source_path = query.get('path') or query.get('source')
-    source_path = source_path.strip('"\'')  # Usuwamy cudzysłowy ze ścieżki
+    source_path = source_path.strip('"\'')
 
     files = get_files_data(source_path, query.get('where'))
 
-    # 2. Sortowanie i limitowanie (jeśli zdefiniowano)
     order_clause = query.get('order')
     if order_clause:
         col = order_clause['column']
@@ -116,7 +113,6 @@ def execute_ast(ast):
         print("Brak plików spełniających kryteria.")
         return
 
-    # 3. Wykonanie konkretnej akcji
     if action == 'SELECT':
         selected_cols = query['columns']
         if selected_cols == '*':
@@ -131,6 +127,10 @@ def execute_ast(ast):
 
     elif action in ['DELETE', 'MOVE', 'COPY']:
         dest_path = query.get('destination', '').strip('"\'')
+
+        # Jeśli kopiujemy/przenosimy i folder docelowy nie istnieje - próbujemy go stworzyć
+        if action in ['MOVE', 'COPY'] and not os.path.exists(dest_path) and not is_dryrun:
+            os.makedirs(dest_path, exist_ok=True)
 
         for f in files:
             src = f['sciezka']
