@@ -23,21 +23,53 @@ Dla instrukcji `DELETE`, `MOVE FROM ... TO ...`, `COPY FROM ... TO ...` wynikiem
 ## Przykład użycia programu
 
 Poniżej znajduje się przykładowe, jednolinijkowe zapytanie weryfikujące działanie interpretera oraz jego spodziewany wynik wyrzucony na standardowe wyjście.
+**Przykładowe zapytania wejściowe (kod SQL):**
+
+1. Wyszukanie dużych plików archiwalnych, posortowanych malejąco według rozmiaru, z limitem do 5 wyników.
 
 **Przykładowe zapytanie wejściowe (kod SQL):**
 ```sql
 SELECT nazwa, rozmiar_b FROM "/home/user/dokumenty" WHERE rozmiar_b > 1024;
+SELECT nazwa, rozmiar, rozszerzenie FROM "/home/user/pobrane" 
+WHERE (rozszerzenie = "zip" OR rozszerzenie = "rar") AND rozmiar > 100 MB 
+ORDER BY rozmiar DESC LIMIT 5; 
 ```
+
 ```text
 Przeszukiwanie: /home/user/dokumenty
+Przeszukiwanie: /home/user/pobrane
+--------------------------------------------------
+nazwa         | rozmiar | rozszerzenie
 --------------------------------------------------
 nazwa | rozmiar_b
+wakacje_2.zip | 1.5 GB  | zip
+backup.rar    | 800 MB  | rar
+dane_ml.zip   | 250 MB  | zip
+--------------------------------------------------
+Znaleziono plików: 3 (Limit: 5)
+```
+2. Symulacja usuwania starych plików (Tryb DRYRUN):
+Bezpieczne sprawdzenie, które pliki tymczasowe zostałyby usunięte z systemu, bez faktycznego kasowania danych z dysku. Zastosowano zaawansowane filtrowanie wzorcem (LIKE).
+
+```sql
+DRYRUN DELETE FROM "/tmp" WHERE nazwa LIKE "%.tmp" OR rozmiar = 0 B;
+```
+
+```text
+[TRYB DRYRUN] Akcja: DELETE
+Katalog: /tmp
 --------------------------------------------------
 raport.pdf | 2048
 notatki.txt | 1536
 prezentacja.pptx | 5120
+Pliki przeznaczone do usunięcia:
+1. cache_v1.tmp (12 KB)
+2. empty_log.txt (0 B)
+3. session.tmp (4 KB)
 --------------------------------------------------
 Znaleziono plików: 3
+[SYMULACJA] Zmodyfikowano plików: 3. Zwolnione miejsce: 16 KB.
+Żadne pliki nie zostały faktycznie usunięte.
 ```
 
 **Planowany język implementacji:** Python z wykorzystaniem biblioteki **PLY (Python Lex-Yacc)**.
