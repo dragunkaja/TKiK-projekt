@@ -17,7 +17,7 @@ Silnik operuje bezpośrednio na metadanych pobieranych z dysku, traktując katal
 
 Dla instrukcji `SELECT` wynikiem działania jest wyrzucona na standardowe wyjście (konsolę) sformatowana tabela tekstowa, zawierająca atrybuty plików, które spełniły warunki zdefiniowane w klauzuli `WHERE`.
 
-Dla instrukcji `DELETE`, `MOVE TO`, `COPY TO` wynikiem jest szczegółowy raport z przebiegu operacji, zawierający liczbę przetworzonych plików, informację o powodzeniu akcji dla poszczególnych rekordów oraz sumaryczne podsumowanie zmian wprowadzonych w systemie plików.
+Dla instrukcji `DELETE`, `MOVE FROM ... TO ...`, `COPY FROM ... TO ...` wynikiem jest szczegółowy raport z przebiegu operacji, zawierający liczbę przetworzonych plików, informację o powodzeniu akcji dla poszczególnych rekordów oraz sumaryczne podsumowanie zmian wprowadzonych w systemie plików.
 
 
 ## Przykład użycia programu
@@ -60,10 +60,10 @@ Skaner języka używa modułu PLY. Wielkość liter dla słów kluczowych jest i
 | **Słowa kluczowe (DQL/DML)** | `SELECT`, `DELETE`, `MOVE`, `COPY`, `TO`, `FROM`, `DRYRUN` | `r'(?i)SELECT'`, `r'(?i)DELETE'` itd.                |
 | **Słowa kluczowe (Klauzule)** | `WHERE`, `ORDER`, `BY`, `LIMIT`, `ASC`, `DESC`             | `r'(?i)WHERE'`, `r'(?i)ORDER'` itd.                  |
 | **Słowa kluczowe (Logika)**| `AND`, `OR`, `NOT`, `LIKE`                                 | `r'(?i)AND'`, `r'(?i)LIKE'` itd.                     |
-| **Operatory relacyjne** | `OPERATOR`                                                 | `r'>=\|<=\|!=\|=\|>\|<'`                             |
+| **Operatory relacyjne** | `OPERATOR`                                                 | ``r'>=|<=|!=|=|>|<'``                             |
 | **Interpunkcja** | `COMMA`, `SEMICOLON`, `STAR`                               | `r','`, `r';'`, `r'\*'`                              |
 | **Nawiasy (Priorytetyzacja)**| `LPAREN`, `RPAREN`                                         | `r'\('`, `r'\)'`                                     |
-| **Jednostki wielkości** | `SIZE_UNIT`                                                | `r'(?i)(GB\|MB\|KB\|B)'`                             |
+| **Jednostki wielkości** | `SIZE_UNIT`                                                | ``r'(?i)(GB|MB|KB|B)'``                             |
 | **Identyfikatory** | `ID`                                                       | `r'[a-zA-Z_][a-zA-Z0-9_]*'`                          |
 | **Dane (Zmienne)** | `STRING`                                                   | `r'\"[^\"]*\"'` lub `r'\'[^\']*\''`                  |
 | | `NUMBER`                                                   | `r'\d+'`                                             |
