@@ -156,8 +156,8 @@ def p_condition_group(p):
 def p_condition_rel(p):
     'condition : ID OPERATOR value'
     p[0] = RelationConditionNode(
+        rel_op=p[2],
         column=p[1],
-        operator=p[2],
         value=p[3],
     )
 
