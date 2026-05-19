@@ -152,7 +152,13 @@ def execute_ast(ast):
 
     # DML (DELETE, MOVE, COPY)
     elif action in ['DELETE', 'MOVE', 'COPY']:
-        source_path = query.get('source').strip('"\'')
+        source_path = query.get('path') or query.get('source')
+
+        if source_path is None:
+            print("[BŁĄD] Brak ścieżki źródłowej.")
+            return
+
+        source_path = source_path.strip('"\'')
         files = get_files_data(source_path, query.get('where'))
 
         limit_clause = query.get('limit')
@@ -163,23 +169,39 @@ def execute_ast(ast):
             print("Brak plików spełniających kryteria.")
             return
 
-        dest_path = query.get('destination', '').strip('"\'')
-        if action in ['MOVE', 'COPY'] and not os.path.exists(dest_path) and not is_dryrun:
-            os.makedirs(dest_path, exist_ok=True)
+        if action in ['MOVE', 'COPY']:
+            dest_path = query.get('destination')
+
+            if dest_path is None:
+                print("[BŁĄD] Brak ścieżki docelowej.")
+                return
+
+            dest_path = dest_path.strip('"\'')
+
+            if not os.path.exists(dest_path) and not is_dryrun:
+                os.makedirs(dest_path, exist_ok=True)
+        else:
+            dest_path = None
 
         for f in files:
             src = f['sciezka']
+
             if action == 'DELETE':
                 print(f"Usuwanie: {src}")
-                if not is_dryrun: os.remove(src)
+                if not is_dryrun:
+                    os.remove(src)
+
             elif action == 'MOVE':
                 dst = os.path.join(dest_path, f['nazwa'])
                 print(f"Przenoszenie: {src} -> {dst}")
-                if not is_dryrun: shutil.move(src, dst)
+                if not is_dryrun:
+                    shutil.move(src, dst)
+
             elif action == 'COPY':
                 dst = os.path.join(dest_path, f['nazwa'])
                 print(f"Kopiowanie: {src} -> {dst}")
-                if not is_dryrun: shutil.copy2(src, dst)
+                if not is_dryrun:
+                    shutil.copy2(src, dst)
 
         print("-" * 60)
         print(f"Przetworzono rekordów: {len(files)}")
