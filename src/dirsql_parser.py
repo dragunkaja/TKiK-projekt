@@ -21,10 +21,14 @@ def p_statement(p):
     'statement : dryrun_opt query'
     p[0] = StatementNode(dryrun=p[1], query=p[2])
 
-def p_dryrun_opt(p):
-    '''dryrun_opt : DRYRUN
-                  | empty'''
-    p[0] = True if p[1] == 'DRYRUN' else False
+def p_dryrun_opt_true(p):
+    'dryrun_opt : DRYRUN'
+    p[0] = True
+
+
+def p_dryrun_opt_empty(p):
+    'dryrun_opt : empty'
+    p[0] = False
 
 def p_query(p):
     '''query : select_query

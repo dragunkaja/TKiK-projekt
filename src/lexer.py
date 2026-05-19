@@ -45,7 +45,12 @@ def t_NUMBER(t):
 
 def t_ID(t):
     r'[a-zA-Z_][a-zA-Z0-9_]*'
-    t.type = reserved.get(t.value.lower(), 'ID')
+    lowered = t.value.lower()
+    t.type = reserved.get(lowered, 'ID')
+
+    if t.type != 'ID':
+        t.value = t.type
+
     return t
 
 #śledzenie numerów linii (przydatne do błędów)
