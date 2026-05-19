@@ -1,0 +1,28 @@
+[build-system]
+requires = ["setuptools>=61"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "dirsql"
+version = "0.1.0"
+description = "Interpreter prostego podzbioru SQL dla systemu plików"
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = [
+    "ply>=3.11"
+]
+
+[project.scripts]
+dirsql = "main:main"
+
+[tool.setuptools]
+py-modules = [
+    "main",
+    "lexer",
+    "dirsql_parser",
+    "engine",
+    "ast_nodes"
+]
+
+[tool.setuptools.package-dir]
+"" = "src"

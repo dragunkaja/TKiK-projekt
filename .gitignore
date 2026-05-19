@@ -1,3 +1,19 @@
-.\idea
-parsetab.py
+# Python
+__pycache__/
+*.pyc
+
+# PLY
 parser.out
+parsetab.py
+
+# macOS
+.DS_Store
+
+# virtual environments
+.venv/
+venv/
+
+# packaging
+*.egg-info/
+build/
+dist/
