@@ -108,7 +108,7 @@ Skaner języka używa modułu PLY. Wielkość liter dla słów kluczowych jest i
 ```yacc
 
 program : statement SEMICOLON
-        | program statement SEMICOLON
+        
 
 statement : dryrun_opt query
 
@@ -120,8 +120,8 @@ query : select_query
       | move_query
       | copy_query
 
-select_query : SELECT column_list FROM STRING where_clause order_clause limit_clause
-
+select_query : SELECT column_list FROM query_source where_clause order_clause limit_clause
+              
 delete_query : DELETE FROM STRING where_clause limit_clause
 
 move_query : MOVE FROM STRING TO STRING where_clause limit_clause
@@ -130,6 +130,9 @@ copy_query : COPY FROM STRING TO STRING where_clause limit_clause
 
 column_list : STAR
             | id_list
+
+query_source : STRING
+              | LPAREN select_query RPAREN
 
 id_list : ID
         | ID COMMA id_list
