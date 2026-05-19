@@ -33,15 +33,16 @@ class QueryNode(ASTNode):
 @dataclass
 class SelectQueryNode(QueryNode):
     columns: Union[str, list]
-    path: str
+    # Zmiana z 'path: str' na 'source' obsługujące stringa lub kolejne zapytanie
+    source: Union[str, Any]
     where: Optional["ConditionNode"] = None
     order: Optional["OrderClauseNode"] = None
     limit: Optional[int] = None
 
-    def __init__(self, columns: Union[str, list], path: str, where: Optional["ConditionNode"] = None, order: Optional["OrderClauseNode"] = None, limit: Optional[int] = None):
+    def __init__(self, columns: Union[str, list], source: Union[str, Any], where: Optional["ConditionNode"] = None, order: Optional["OrderClauseNode"] = None, limit: Optional[int] = None):
         super().__init__("SELECT")
         self.columns = columns
-        self.path = path
+        self.source = source
         self.where = where
         self.order = order
         self.limit = limit
@@ -50,7 +51,8 @@ class SelectQueryNode(QueryNode):
         return {
             "action": self.action,
             "columns": self.columns,
-            "path": self.path,
+            # Jeśli source to inny węzeł (podzapytanie), spłaszcz go. Jeśli to string, zostaw.
+            "source": self.source.to_dict() if isinstance(self.source, ASTNode) else self.source,
             "where": self.where.to_dict() if self.where else None,
             "order": self.order.to_dict() if self.order else None,
             "limit": self.limit,

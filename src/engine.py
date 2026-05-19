@@ -85,8 +85,42 @@ def get_files_data(path, where_ast):
     return results
 
 
+def process_select(query):
+    """Pomocnicza funkcja rekurencyjna dla zapytań SELECT (zwraca dane, nie wypisuje ich od razu)."""
+    source = query.get('source')
+
+    # KROK 1: SKĄD MAMY DANE?
+    if isinstance(source, dict):
+        # Źródłem jest podzapytanie! Wywołujemy się rekurencyjnie.
+        files = process_select(source)
+    else:
+        # Źródłem jest ścieżka tekstowa na dysku.
+        path = source.strip('"\'')
+        # Ściągamy wszystkie pliki (wewnętrzne WHERE z pliku traktujemy też tu)
+        files = get_files_data(path, None)
+
+        # KROK 2: FILTROWANIE (WHERE)
+    where_ast = query.get('where')
+    if where_ast:
+        files = [f for f in files if evaluate_condition(where_ast, f)]
+
+    # KROK 3: SORTOWANIE (ORDER BY)
+    order_clause = query.get('order')
+    if order_clause:
+        col = order_clause['column']
+        is_reverse = (order_clause['dir'] == 'DESC')
+        files.sort(key=lambda x: x.get(col, 0), reverse=is_reverse)
+
+    # KROK 4: LIMIT
+    limit_clause = query.get('limit')
+    if limit_clause is not None:
+        files = files[:limit_clause]
+
+    return files
+
+
 def execute_ast(ast):
-    """Główna funkcja wykonująca zapytanie na dysku."""
+    """Główna funkcja wykonująca zapytanie i wyświetlająca wynik."""
     is_dryrun = ast.get('dryrun', False)
     query = ast['query']
     action = query['action']
@@ -94,26 +128,14 @@ def execute_ast(ast):
     print(f"\n[{'DRY-RUN' if is_dryrun else 'WYKONANIE'}] Akcja: {action}")
     print("-" * 60)
 
-    source_path = query.get('path') or query.get('source')
-    source_path = source_path.strip('"\'')
-
-    files = get_files_data(source_path, query.get('where'))
-
-    order_clause = query.get('order')
-    if order_clause:
-        col = order_clause['column']
-        is_reverse = (order_clause['dir'] == 'DESC')
-        files.sort(key=lambda x: x.get(col, 0), reverse=is_reverse)
-
-    limit_clause = query.get('limit')
-    if limit_clause is not None:
-        files = files[:limit_clause]
-
-    if not files:
-        print("Brak plików spełniających kryteria.")
-        return
-
+    # Jeśli to SELECT, używamy nowej,rekurencyjnej funkcji
     if action == 'SELECT':
+        files = process_select(query)
+
+        if not files:
+            print("Brak plików spełniających kryteria.")
+            return
+
         selected_cols = query['columns']
         if selected_cols == '*':
             selected_cols = ['nazwa', 'rozszerzenie', 'rozmiar_b', 'sciezka']
@@ -125,29 +147,39 @@ def execute_ast(ast):
             row = [str(f.get(c, "N/A")) for c in selected_cols]
             print(" | ".join(row))
 
-    elif action in ['DELETE', 'MOVE', 'COPY']:
-        dest_path = query.get('destination', '').strip('"\'')
+        print("-" * 60)
+        print(f"Zwrócono rekordów: {len(files)}")
 
-        # Jeśli kopiujemy/przenosimy i folder docelowy nie istnieje - próbujemy go stworzyć
+    # DML (DELETE, MOVE, COPY)
+    elif action in ['DELETE', 'MOVE', 'COPY']:
+        source_path = query.get('source').strip('"\'')
+        files = get_files_data(source_path, query.get('where'))
+
+        limit_clause = query.get('limit')
+        if limit_clause is not None:
+            files = files[:limit_clause]
+
+        if not files:
+            print("Brak plików spełniających kryteria.")
+            return
+
+        dest_path = query.get('destination', '').strip('"\'')
         if action in ['MOVE', 'COPY'] and not os.path.exists(dest_path) and not is_dryrun:
             os.makedirs(dest_path, exist_ok=True)
 
         for f in files:
             src = f['sciezka']
-
             if action == 'DELETE':
                 print(f"Usuwanie: {src}")
                 if not is_dryrun: os.remove(src)
-
             elif action == 'MOVE':
                 dst = os.path.join(dest_path, f['nazwa'])
                 print(f"Przenoszenie: {src} -> {dst}")
                 if not is_dryrun: shutil.move(src, dst)
-
             elif action == 'COPY':
                 dst = os.path.join(dest_path, f['nazwa'])
                 print(f"Kopiowanie: {src} -> {dst}")
                 if not is_dryrun: shutil.copy2(src, dst)
 
-    print("-" * 60)
-    print(f"Przetworzono rekordów: {len(files)}")
+        print("-" * 60)
+        print(f"Przetworzono rekordów: {len(files)}")

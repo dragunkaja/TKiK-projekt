@@ -34,9 +34,18 @@ def p_query(p):
     p[0] = p[1]
 
 def p_select_query(p):
-    'select_query : SELECT column_list FROM STRING where_clause order_clause limit_clause'
-    p[0] = SelectQueryNode(columns=p[2], path=p[4], where=p[5], order=p[6], limit=p[7])
+    'select_query : SELECT column_list FROM query_source where_clause order_clause limit_clause'
+    p[0] = SelectQueryNode(columns=p[2], source=p[4], where=p[5], order=p[6], limit=p[7])
 
+def p_query_source(p):
+    '''query_source : STRING
+                    | LPAREN select_query RPAREN'''
+    # Jeśli to string (ścieżka), weź stringa (p[1]).
+    # Jeśli to nawias, weź to co jest w nawiasie (p[2]).
+    if len(p) == 2:
+        p[0] = p[1]
+    else:
+        p[0] = p[2]
 def p_delete_query(p):
     'delete_query : DELETE FROM STRING where_clause limit_clause'
     p[0] = DeleteQueryNode(path=p[3], where=p[4], limit=p[5])
